@@ -18,8 +18,11 @@ jobs:
               with:
                   fetch-depth: 0
 
+            - name: List available Xcode versions
+              run: ls /Applications | grep Xcode
+
             - name: Select Xcode version
-              run: sudo xcode-select -s /Applications/Xcode_26.1.app
+              run: sudo xcode-select -s /Applications/Xcode_26.0.app || sudo xcode-select -s /Applications/Xcode_26.1.app || sudo xcode-select -s /Applications/Xcode_26.app
 
             - name: Setup .NET SDK
               uses: actions/setup-dotnet@v4
@@ -61,7 +64,9 @@ jobs:
                     # iOS Simulator Build
                     echo "Building iOS Simulator App..."
                     mkdir -p build-${BUILD_TIMESTAMP}/${app}/iOS
-                    dotnet build $app -f net9.0-ios -c Debug -p:Platform=iPhoneSimulator -p:RuntimeIdentifier=iossimulator-arm64 -p:ApplicationDisplayVersion=$VER -p:ApplicationVersion=$CODE
+                    dotnet build $app -f net9.0-ios -c Debug -p:Platform=iPhoneSimulator -p:RuntimeIdentifier=iossimulator-arm64 \
+                        -p:ApplicationDisplayVersion=$VER -p:ApplicationVersion=$CODE \
+                        -p:SuppressXCodeVersionCheck=true -p:_SuppressSdkVersionCheck=true
                     cp -r $app/bin/**/net9.0-ios/iossimulator-arm64/*.app build-${BUILD_TIMESTAMP}/${app}/iOS/ || true
                   done
 
