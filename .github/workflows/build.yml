@@ -2,9 +2,8 @@ name: Build MAUI Apps
 
 on:
     push:
-        branches:
-            - main
-    workflow_dispatch:
+        tags:
+            - "v*"
 
 jobs:
     build:
@@ -30,6 +29,9 @@ jobs:
                   dotnet workload install maui-android
                   dotnet workload install maui-ios
 
+            - name: Install GitVersion Tool
+              run: dotnet tool install --global GitVersion.Tool
+
             - name: Build all apps
               run: |
                   mkdir -p build-${BUILD_TIMESTAMP}
@@ -37,11 +39,17 @@ jobs:
 
                   for app in "${apps[@]}"; do
                     echo "Building $app"
+                    
+                    VER=$(dotnet gitversion /showvariable MajorMinorPatch)
+                    echo "VERSION=$VER" >> $GITHUB_ENV
+                    # Simple version code generation: remove dots
+                    CODE=$(echo $VER | tr -d '.')
+                    echo "VERSION_CODE=$CODE" >> $GITHUB_ENV
 
                     # Android
                     echo "Building Android APK..."
                     mkdir -p build-${BUILD_TIMESTAMP}/${app}/Android
-                    dotnet build $app -f:net10.0-android -c Release /p:AndroidPackageFormat=apk
+                    dotnet build MauiVersionApp.csproj -f net10.0-android -c Debug -p:AndroidPackageFormat=apk -p:ApplicationDisplayVersion=${{ env.VERSION }} -p:ApplicationVersion=${{ env.VERSION_CODE }}
                     cp $app/bin/Release/net10.0-android/*.apk build-${BUILD_TIMESTAMP}/${app}/Android/ || true
 
                   done
