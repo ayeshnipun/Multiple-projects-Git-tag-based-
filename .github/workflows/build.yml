@@ -1,0 +1,60 @@
+name: Build MAUI Apps
+
+on:
+    push:
+        branches:
+            - main
+    workflow_dispatch:
+
+jobs:
+    build:
+        runs-on: macos-latest
+
+        env:
+            BUILD_TIMESTAMP: ${{ github.run_id }}
+
+        steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
+
+            - name: Setup .NET SDK
+              uses: actions/setup-dotnet@v4
+              with:
+                  dotnet-version: "10.0.x"
+
+            - name: Install MAUI workloads
+              run: |
+                  dotnet workload install maui
+                  dotnet workload install maui-android
+                  dotnet workload install maui-ios
+
+            - name: Build all apps
+              run: |
+                  mkdir -p build-${BUILD_TIMESTAMP}
+                  apps=("ClientC" "ClientD" "ClientE")
+
+                  for app in "${apps[@]}"; do
+                    echo "Building $app"
+
+                    # Android
+                    echo "Building Android APK..."
+                    mkdir -p build-${BUILD_TIMESTAMP}/${app}/Android
+                    dotnet build $app -f:net10.0-android -c Release /p:AndroidPackageFormat=apk
+                    cp $app/bin/Release/net10.0-android/*.apk build-${BUILD_TIMESTAMP}/${app}/Android/ || true
+
+                    # iOS IPA
+                    echo "Building iOS IPA..."
+                    mkdir -p build-${BUILD_TIMESTAMP}/${app}/iOS
+                    dotnet build $app -f:net10.0-ios -c Release -p:Platform=iPhone -p:BuildIpa=true \
+                        -p:SigningKeychain=login.keychain \
+                        -p:AutomaticSigning=true
+                    cp $app/bin/Release/net10.0-ios/*.ipa build-${BUILD_TIMESTAMP}/${app}/iOS/ || true
+                  done
+
+            - name: Upload build artifacts
+              uses: actions/upload-artifact@v3
+              with:
+                  name: build-${{ env.BUILD_TIMESTAMP }}
+                  path: build-${{ env.BUILD_TIMESTAMP }}
