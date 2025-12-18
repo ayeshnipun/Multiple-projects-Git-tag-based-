@@ -42,30 +42,18 @@ jobs:
                     
                     VER=$(dotnet gitversion /showvariable MajorMinorPatch)
                     echo "VERSION=$VER" >> $GITHUB_ENV
-                    CODE=$(echo $VER | awk -F. '{ printf("%d%02d%02d", $1,$2,$3) }')
+                    # Simple version code generation: remove dots
+                    CODE=$(echo $VER | tr -d '.')
                     echo "VERSION_CODE=$CODE" >> $GITHUB_ENV
-
-                    echo "VER=$VER, CODE=$CODE"
-
+                    
                     echo "Restore"
                     dotnet restore $app
 
                     # Android
                     echo "Building Android APK..."
                     mkdir -p build-${BUILD_TIMESTAMP}/${app}/Android
-                    dotnet publish $app -f net10.0-android -c Debug \
-                        -p:AndroidPackageFormat=apk \
-                        -p:ApplicationDisplayVersion=$VERSION \
-                        -p:ApplicationVersion=$VERSION_CODE \
-                        -p:AndroidKeyStore=false
-
-                    APK_PATH=$(find $app/bin/Debug/net10.0-android -name '*.apk' | head -n 1)
-                    if [ -f "$APK_PATH" ]; then
-                        cp "$APK_PATH" build-${BUILD_TIMESTAMP}/${app}/Android/
-                        echo "APK copied: $APK_PATH"
-                    else
-                        echo "APK not found for $app"
-                    fi
+                    dotnet publish $app -f net10.0-android -c Debug -p:AndroidPackageFormat=apk -p:ApplicationDisplayVersion=${{ env.VERSION }} -p:ApplicationVersion=${{ env.VERSION_CODE }}
+                    cp $app/bin/**/net10.0-android/**/*.apk build-${BUILD_TIMESTAMP}/${app}/Android/ || true
                   done
 
             - name: Upload build artifacts
