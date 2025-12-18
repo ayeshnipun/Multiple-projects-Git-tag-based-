@@ -7,7 +7,7 @@ on:
 
 jobs:
     build:
-        runs-on: macos-14
+        runs-on: macos-latest
 
         env:
             BUILD_TIMESTAMP: ${{ github.run_id }}
@@ -21,7 +21,7 @@ jobs:
             - name: Setup Xcode
               uses: maxim-lobanov/setup-xcode@v1
               with:
-                  xcode-version: "16.2"
+                  xcode-version: "latest-stable"
 
             - name: Setup .NET SDK
               uses: actions/setup-dotnet@v4
@@ -40,7 +40,7 @@ jobs:
             - name: Build all apps
               run: |
                   mkdir -p build-${BUILD_TIMESTAMP}
-                  apps=("ClientC" "ClientD" "ClientE")
+                  apps=("ClientC")
 
                   for app in "${apps[@]}"; do
                     echo "Building $app"
