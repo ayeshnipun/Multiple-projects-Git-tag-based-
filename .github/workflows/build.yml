@@ -35,7 +35,7 @@ jobs:
             - name: Build all apps
               run: |
                   mkdir -p build-${BUILD_TIMESTAMP}
-                  apps=("ClientC" "ClientD" "ClientE")
+                  apps=("ClientC")
 
                   for app in "${apps[@]}"; do
                     echo "Building $app"
@@ -56,7 +56,8 @@ jobs:
                     dotnet publish $app -f net10.0-android -c Debug \
                         -p:AndroidPackageFormat=apk \
                         -p:ApplicationDisplayVersion=$VERSION \
-                        -p:ApplicationVersion=$VERSION_CODE
+                        -p:ApplicationVersion=$VERSION_CODE \
+                        -p:AndroidKeyStore=false
 
                     APK_PATH=$(find $app/bin/Debug/net10.0-android -name '*.apk' | head -n 1)
                     if [ -f "$APK_PATH" ]; then
