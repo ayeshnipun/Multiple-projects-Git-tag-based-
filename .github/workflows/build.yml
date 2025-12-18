@@ -44,13 +44,6 @@ jobs:
                     dotnet build $app -f:net10.0-android -c Release /p:AndroidPackageFormat=apk
                     cp $app/bin/Release/net10.0-android/*.apk build-${BUILD_TIMESTAMP}/${app}/Android/ || true
 
-                    # iOS IPA
-                    echo "Building iOS IPA..."
-                    mkdir -p build-${BUILD_TIMESTAMP}/${app}/iOS
-                    dotnet build $app -f:net10.0-ios -c Release -p:Platform=iPhone -p:BuildIpa=true \
-                        -p:SigningKeychain=login.keychain \
-                        -p:AutomaticSigning=true
-                    cp $app/bin/Release/net10.0-ios/*.ipa build-${BUILD_TIMESTAMP}/${app}/iOS/ || true
                   done
 
             - name: Upload build artifacts
