@@ -52,9 +52,8 @@ jobs:
                     # Android
                     echo "Building Android APK..."
                     mkdir -p build-${BUILD_TIMESTAMP}/${app}/Android
-                    dotnet publish $app -f net10.0-android -c Debug -p:AndroidPackageFormat=apk -p:ApplicationDisplayVersion=${{ env.VERSION }} -p:ApplicationVersion=${{ env.VERSION_CODE }}
+                    dotnet build $app -f net10.0-android -c Debug -p:AndroidPackageFormat=apk -p:ApplicationDisplayVersion=${{ env.VERSION }} -p:ApplicationVersion=${{ env.VERSION_CODE }}
                     cp $app/bin/**/net10.0-android/**/*.apk build-${BUILD_TIMESTAMP}/${app}/Android/ || true
-
                   done
 
             - name: Upload build artifacts
