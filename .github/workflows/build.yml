@@ -47,7 +47,7 @@ jobs:
                     echo "VERSION_CODE=$CODE" >> $GITHUB_ENV
                     
                     echo "Restore"
-                    dotnet restore
+                    dotnet restore $app
 
                     # Android
                     echo "Building Android APK..."
