@@ -23,6 +23,9 @@
 
 		<!-- App Identifier -->
 		<ApplicationId>com.companyname.clientc</ApplicationId>
+        
+<!-- Suppress error NETSDK1147 / Xcode version mismatch for Preview .NET versions -->
+    <_SuppressSdkVersionCheck>true</_SuppressSdkVersionCheck>
 
 		<!-- To develop, package, and publish an app to the Microsoft Store, see: https://aka.ms/MauiTemplateUnpackaged -->
 		<WindowsPackageType>None</WindowsPackageType>

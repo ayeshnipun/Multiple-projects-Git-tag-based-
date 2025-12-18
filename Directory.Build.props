@@ -1,8 +1,0 @@
-<Project>
-  <PropertyGroup>
-    <_SuppressSdkVersionCheck>true</_SuppressSdkVersionCheck>
-    <SuppressXcodeVersionCheck>true</SuppressXcodeVersionCheck>
-    <ContinueOnInvalidXcodeVersion>true</ContinueOnInvalidXcodeVersion>
-    <_IgnoreXcodeVersionCheck>true</_IgnoreXcodeVersionCheck>
-  </PropertyGroup>
-</Project>
