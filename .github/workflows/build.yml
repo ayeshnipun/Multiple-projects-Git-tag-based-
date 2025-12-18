@@ -45,6 +45,9 @@ jobs:
                     # Simple version code generation: remove dots
                     CODE=$(echo $VER | tr -d '.')
                     echo "VERSION_CODE=$CODE" >> $GITHUB_ENV
+                    
+                    echo "Restore"
+                    dotnet restore
 
                     # Android
                     echo "Building Android APK..."
