@@ -60,6 +60,13 @@ jobs:
                     dotnet publish $app -f net9.0-android -c Debug -p:AndroidPackageFormat=apk -p:ApplicationDisplayVersion=$VER -p:ApplicationVersion=$CODE
                     cp $app/bin/**/net9.0-android/**/*.apk build-${BUILD_TIMESTAMP}/${app}/Android/ || true
 
+                    # iOS Simulator Build
+                    echo "Building iOS Simulator App..."
+                    mkdir -p build-${BUILD_TIMESTAMP}/${app}/iOS
+                    dotnet build $app -f net9.0-ios -c Debug -p:Platform=iPhoneSimulator -p:RuntimeIdentifier=iossimulator-arm64 \
+                        -p:ApplicationDisplayVersion=$VER -p:ApplicationVersion=$CODE \
+                        -p:SuppressXcodeVersionCheck=true -p:_SuppressSdkVersionCheck=true -p:ContinueOnInvalidXcodeVersion=true -p:_IgnoreXcodeVersionCheck=true
+                    cp -r $app/bin/**/net9.0-ios/iossimulator-arm64/*.app build-${BUILD_TIMESTAMP}/${app}/iOS/ || true
                   done
 
             - name: Upload build artifacts
