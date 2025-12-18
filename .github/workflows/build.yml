@@ -61,7 +61,7 @@ jobs:
                     # iOS Simulator Build
                     echo "Building iOS Simulator App..."
                     mkdir -p build-${BUILD_TIMESTAMP}/${app}/iOS
-                    dotnet publish $app -f net9.0-ios -c Debug -p:Platform=iPhoneSimulator -p:RuntimeIdentifier=iossimulator-arm64 -p:BuildIpa=false
+                    dotnet build $app -f net9.0-ios -c Debug -p:Platform=iPhoneSimulator -p:RuntimeIdentifier=iossimulator-arm64 -p:ApplicationDisplayVersion=$VER -p:ApplicationVersion=$CODE
                     cp -r $app/bin/**/net9.0-ios/iossimulator-arm64/*.app build-${BUILD_TIMESTAMP}/${app}/iOS/ || true
                   done
 
