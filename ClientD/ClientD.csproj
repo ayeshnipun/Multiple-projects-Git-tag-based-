@@ -74,12 +74,13 @@
     <PropertyGroup>
       <GV_Version Condition="'$(GV_Version)' == ''">1.0.0</GV_Version>
       
-      <Version>$(GV_Version)</Version>
-      <ApplicationDisplayVersion>$(GV_Version)</ApplicationDisplayVersion>
-      <ApplicationVersion>$(GV_Version.Replace('.', ''))</ApplicationVersion>
+      <ApplicationDisplayVersion Condition="'$(ApplicationDisplayVersion)' == ''">$(GV_Version)</ApplicationDisplayVersion>
+      <ApplicationVersion Condition="'$(ApplicationVersion)' == ''">$(GV_Version.Replace('.', ''))</ApplicationVersion>
       
       <!-- Safe fallback for integer conversion if something went wrong -->
       <ApplicationVersion Condition="!$([System.Text.RegularExpressions.Regex]::IsMatch('$(ApplicationVersion)', '^\d+$'))">1</ApplicationVersion>
+      
+      <Version>$(ApplicationDisplayVersion)</Version>
     </PropertyGroup>
     
     <Message Text="Updated MAUI Versions -- Version: $(Version), Display: $(ApplicationDisplayVersion), VersionCode: $(ApplicationVersion)" Importance="High" />
