@@ -29,6 +29,9 @@ jobs:
                   dotnet workload install maui-android
                   dotnet workload install maui-ios
             
+            - name: Restore ClientC (bootstrap GitVersion)
+              run: dotnet restore ClientC/ClientC.csproj
+
             - name: Initialize GitVersion
               run: dotnet msbuild ClientC/ClientC.csproj /t:ShowGitVersionInfo /p:Configuration=Debug
 
