@@ -1,11 +1,9 @@
-tag-prefix: "v"
+assembly-versioning-scheme: MajorMinorPatch
+assembly-file-versioning-scheme: MajorMinorPatch
 
 branches:
-  main:
-    regex: ^main$
-    increment: Patch
   release:
-    regex: ^releases?[/-]
+    regex: ^release\/(?<Major>\d+)\.(?<Minor>\d+)\.(?<Patch>\d+)$
     label: ""
-    increment: Patch
+    increment: None
     source-branches: ['main']
