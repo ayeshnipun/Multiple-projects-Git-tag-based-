@@ -1,6 +1,18 @@
 {
-  "sdk": {
-    "version": "9.0.100",
-    "rollForward": "latestPatch"
-  }
+    "sdk": {
+        "version": "9.0.203",
+        "rollForward": "latestPatch"
+    },
+    "clients": [
+        {
+            "name": "ClientC",
+            "isiOS": true,
+            "isAndoird": false
+        },
+        {
+            "name": "ClientD",
+            "isiOS": false,
+            "isAndoird": true
+        }
+    ]
 }

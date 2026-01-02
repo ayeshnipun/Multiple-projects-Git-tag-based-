@@ -17,6 +17,10 @@ build-{id}
             |-- iOS
                     |-- *.ipa
 
+
+
+
+
 Things to be concerned
 
 1) Artifact storage
