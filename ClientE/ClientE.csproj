@@ -65,8 +65,7 @@
 	</ItemGroup>
 
   <Target Name="SetMauiVersion"
-        BeforeTargets="_GenerateAndroidManifest;PrepareForBuild"
-        DependsOnTargets="GitVersion">
+        BeforeTargets="_GenerateAndroidManifest;PrepareForBuild">
     
     <PropertyGroup>
       <!-- Use the property provided by GitVersion.MsBuild -->
