@@ -6,6 +6,6 @@ branches:
     increment: Patch
   release:
     regex: ^releases?[/-]
-    tag: ""
+    label: ""
     increment: Patch
     source-branches: ['main']
