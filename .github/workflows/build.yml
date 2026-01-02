@@ -28,7 +28,15 @@ jobs:
                   dotnet workload install maui
                   dotnet workload install maui-android
                   dotnet workload install maui-ios
-               
+            
+            - name: Initialize GitVersion
+              run: dotnet msbuild /t:ShowGitVersionInfo /p:Configuration=Debug
+
+            - name: Capture GitVersion
+              run: |
+                VERSION=$(dotnet msbuild /t:ShowGitVersionInfo /p:Configuration=Debug | grep MajorMinorPatch | awk '{print $2}')
+                echo "GV_VERSION=$VERSION" >> $GITHUB_ENV
+
             - name: Build all apps
               run: |
                   mkdir -p build-${BUILD_TIMESTAMP}
@@ -45,9 +53,13 @@ jobs:
                     echo "Building Android APK..."
                     mkdir -p build-${BUILD_TIMESTAMP}/${app}/Android
                     # Versions are now handled by GitVersion.MsBuild
-                    dotnet publish $app -f net9.0-android -c Debug -p:AndroidPackageFormat=apk
+                    dotnet publish $app -f net9.0-android -c Debug \
+                        -p:AndroidPackageFormat=apk \
+                        -p:ApplicationDisplayVersion=${GV_VERSION} \
+                        -p:ApplicationVersion=$(echo ${GV_VERSION} | tr -d '.')
                     cp $app/bin/**/net9.0-android/**/*.apk build-${BUILD_TIMESTAMP}/${app}/Android/ || true
-
+                    echo "Stopping after first app for testing."
+                    break
                   done
 
             - name: Upload build artifacts
