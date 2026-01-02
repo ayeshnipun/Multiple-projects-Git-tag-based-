@@ -4,3 +4,8 @@ branches:
   main:
     regex: ^main$
     increment: Patch
+  release:
+    regex: ^releases?[/-]
+    tag: ""
+    increment: Patch
+    source-branches: ['main']

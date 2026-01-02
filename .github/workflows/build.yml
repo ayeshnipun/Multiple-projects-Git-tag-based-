@@ -35,19 +35,8 @@ jobs:
                   # ClassLibrary and TemplateProject are excluded by omitting them from this list
                   apps=("ClientC" "ClientD" "ClientE")
 
-                  # Extract version from branch name (e.g. release/1.2.2 -> 1.2.2)
-                  BRANCH_NAME="${{ github.ref_name }}"
-                  VER=${BRANCH_NAME#release/}
-                  
-                  echo "Detected Version: $VER from branch $BRANCH_NAME"
-                  echo "VERSION=$VER" >> $GITHUB_ENV
-                  
-                  # Simple version code generation: remove dots
-                  CODE=$(echo $VER | tr -d '.')
-                  echo "VERSION_CODE=$CODE" >> $GITHUB_ENV
-
                   for app in "${apps[@]}"; do
-                    echo "Building $app with Version $VER (Code: $CODE)"
+                    echo "Building $app"
                     
                     echo "Restore"
                     dotnet restore $app
@@ -55,7 +44,8 @@ jobs:
                     # Android
                     echo "Building Android APK..."
                     mkdir -p build-${BUILD_TIMESTAMP}/${app}/Android
-                    dotnet publish $app -f net9.0-android -c Debug -p:AndroidPackageFormat=apk -p:ApplicationDisplayVersion=$VER -p:ApplicationVersion=$CODE
+                    # Versions are now handled by GitVersion.MsBuild
+                    dotnet publish $app -f net9.0-android -c Debug -p:AndroidPackageFormat=apk
                     cp $app/bin/**/net9.0-android/**/*.apk build-${BUILD_TIMESTAMP}/${app}/Android/ || true
 
                   done

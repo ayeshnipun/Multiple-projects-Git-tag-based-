@@ -64,14 +64,14 @@
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="9.0.0" />
 	</ItemGroup>
 
-    <Target Name="SetMauiVersion"
-        BeforeTargets="_GenerateAndroidManifest;PrepareForBuild">
-    <!-- Get Version string -->
-    <Exec Command="dotnet gitversion /showvariable MajorMinorPatch" ConsoleToMSBuild="true" StandardOutputImportance="Low" IgnoreExitCode="true">
-      <Output TaskParameter="ConsoleOutput" PropertyName="GV_Version" />
-    </Exec>
-
+  <Target Name="SetMauiVersion"
+        BeforeTargets="_GenerateAndroidManifest;PrepareForBuild"
+        DependsOnTargets="GitVersion">
+    
     <PropertyGroup>
+      <!-- Use the property provided by GitVersion.MsBuild -->
+      <GV_Version>$(GitVersion_MajorMinorPatch)</GV_Version>
+
       <GV_Version Condition="'$(GV_Version)' == ''">1.0.0</GV_Version>
       
       <ApplicationDisplayVersion Condition="'$(ApplicationDisplayVersion)' == ''">$(GV_Version)</ApplicationDisplayVersion>
